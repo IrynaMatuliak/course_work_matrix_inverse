@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HelpDialog</class>
+ <widget class="QDialog" name="HelpDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>650</width>
+    <height>605</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>650</width>
+    <height>605</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Help</string>
+  </property>
+  <widget class="QFrame" name="HepFrame">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>9</y>
+     <width>631</width>
+     <height>541</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QTextBrowser" name="HelpWindow">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>11</y>
+      <width>601</width>
+      <height>521</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(244, 248, 255);
+border-bottom-color: rgb(0, 0, 0);</string>
+    </property>
+    <property name="html">
+     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700;&quot;&gt;Instructions on Using Inverse Matrix Calculator&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;  This calculator provides solution to find inverse matrix to originally entered manually or generated randomly. &lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;  Main window &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;&amp;quot;Inverse Of Matrix&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; has table where original matrix should be entered or generated. To enter elements of matrix manually you need to make a double click on the needed cell of matrix table and type a decimal value. Entering elements of original matrix you shoud use decimal numbers in range  [-1e-10; -1e10] U [1e-10; 1e10] U {0}.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;  Main window &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;&amp;quot;Inverse Of Matrix&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; three comboboxes: &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Matrix size&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; where the dimension of matrix should be set, &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Solution method&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; where one of methods (method of LUP-decomposition or Shults method) should be chosen, and &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Precision&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; combobox where precision of calculation should be set when using Shults method to find inverse matrix. &lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;  Main window &amp;quot;Inverse Of Matrix&amp;quot; also has buttons: &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Generate&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;, using which you can generate matrix randomly, &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Clear&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;, using which you can erase everyting that was entered into original matrix and &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Calculate&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;, using which you can find the inverse matrix to the original one.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;  &lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;  After clicking button calculate window &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;&amp;quot;Results&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; opens. There are printed results which are possible to be saved into a text file using button &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Save&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;. &lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Note:&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; window &amp;quot;Results&amp;quot; is modal, so that it is impossible to change windows from it, until it is closed.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="CancelButton">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>560</y>
+     <width>83</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(226, 243, 255);</string>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
