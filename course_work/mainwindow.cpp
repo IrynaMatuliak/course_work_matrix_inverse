@@ -11,9 +11,7 @@
 
 std::vector<const char*> methods {"LUP-decomposition", "Shults Method"};
 std::vector<int> sizeOfMatrix {2, 3, 4, 5, 6, 7, 8, 9, 10};
-//std::vector<const char*> sizeOfMatrixStr {"2", "3", "4", "5", "6", "7", "8", "9", "10"};
 std::vector<double> precision {1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10};
-//std::vector<const char*> precisionStr {"1e-1", "1e-2", "1e-3", "1e-4", "1e-5", "1e-6", "1e-7", "1e-8", "1e-9", "1e-10"};
 
 QString output_matrix(const QString& caption, const SquareMatrix& m)
 {
@@ -21,10 +19,10 @@ QString output_matrix(const QString& caption, const SquareMatrix& m)
     for (size_t j = 0; j < m.size(); ++j) {
         for (size_t i = 0; i < m.size(); ++i) {
             double d = m(i, j);
-            if (d > -1e5 && d < -1e-5 || d > 1e-5 && d < 1e5 || d == 0 || std::isnan(d)) {
+            if ((d > -1e5 && d < -1e-5) || (d > 1e-5 && d < 1e5) || d == 0 || std::isnan(d)) {
                 result += QString().asprintf("%15.4lf", m[i][j]);
             } else {
-                if (d > -1e11 && d < -1e-11 || d > 1e-11 && d < 1e11) {
+                if ((d > -1e11 && d < -1e-11) || (d > 1e-11 && d < 1e11)) {
                     result += QString().asprintf("%15.4e", m[i][j]);
                 } else {
                     result += QString().asprintf("%15.4lf", 0.);
@@ -99,7 +97,7 @@ void InverseOfMatrix::on_CalculateButton_clicked()
             QString text;
             if (ui->Matrix->item(i, j)) {
                 d = ui->Matrix->item(i, j)->text().toDouble(&ok);
-                if (!(d >= -1e10 && d <= -1e-10 || d >= 1e-10 && d <= 1e10 ||  d == 0)) {
+                if (!((d >= -1e10 && d <= -1e-10) || (d >= 1e-10 && d <= 1e10) ||  d == 0)) {
                     ok = false;
                     prefix = "Value is out of range [-1e10; -1e-10] U [1e-10; 1e10] U {0}.\nInvalid double value ";
                 }
@@ -183,8 +181,7 @@ void InverseOfMatrix::on_OutputToFile_clicked()
         tr("Save matrix"),
         QDir::currentPath(),
         tr("Text files (*.txt);;All files (*.*)"));
-    if (!filename.isNull())
-    {
+    if (!filename.isNull()) {
         out_stream wrap_stream(filename.toStdString());
 
         if (!wrap_stream->is_open()) {
@@ -242,6 +239,7 @@ QString InverseOfMatrix::formResults(const Results& res)
         result += "Precision: " + QString().asprintf("%e\n", res.precision);
         break;
     }
+    result += "Determinant: " + QString().asprintf("%15.4lf\n", res.determinant);
     result += output_matrix("Inverted matrix:", res.X);
     result += output_matrix("Check A*A^(-1) matrix:", res.A * res.X);
     result += "Complexity of calculations: " + QString().asprintf("%d\n", res.complexity);

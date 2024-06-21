@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <optional>
 #include "matrixinverse.h"
 
 class SquareMatrix {
@@ -23,10 +24,13 @@ public:
     SquareMatrix operator+(const SquareMatrix& m) const;
     void transpond();
     void normalize();
+    void permutateRows(size_t r1, size_t r2);
+    void permutateCols(size_t c1, size_t c2);
     double det() const;
 
     static SquareMatrix IdentityMatrix(size_t n);
-    void permutate(size_t r1, size_t r2);
+    void permutate_rows(size_t r1, size_t r2);
+    void permutate_columns(size_t c1, size_t c2);
     SquareMatrix LowTriangularMatrix();
     SquareMatrix HighTriangularMatrix();
     bool isSingular();
@@ -69,6 +73,8 @@ private:
 
     void init(void);
     void init(const SquareMatrix& m);
+    std::optional<size_t> find_zero() const;
+    SquareMatrix prepare_for_Gaus(double& sign) const;
 };
 
 struct Results {
@@ -79,6 +85,7 @@ struct Results {
     long int complexity;
     double precision;
     int method;
+    double determinant;
 
     Results();
     /*Results(const Results& r);

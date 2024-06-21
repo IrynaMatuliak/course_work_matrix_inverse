@@ -9,10 +9,10 @@ QString matrix2str(const QString& caption, const SquareMatrix& m)
     for (size_t j = 0; j < m.size(); ++j) {
         for (size_t i = 0; i < m.size(); ++i) {
             double d = m(i, j);
-            if (d > -1e5 && d < -1e-5 || d > 1e-5 && d < 1e5 || d == 0) {
+            if ((d > -1e5 && d < -1e-5) || (d > 1e-5 && d < 1e5) || d == 0) {
                 result += QString().asprintf("%15.4lf", m[i][j]);
             } else {
-                if (d > -1e11 && d < -1e-11 || d > 1e-11 && d < 1e11) {
+                if ((d > -1e11 && d < -1e-11) || (d > 1e-11 && d < 1e11)) {
                     result += QString().asprintf("%15.4e", m[i][j]);
                 } else {
                     result += QString().asprintf("%15.4lf", 0.);
@@ -54,6 +54,7 @@ Results CLUPMatrixInverse::decompose(const SquareMatrix& matrix)
     Results res;
     res.complexity = 0;
     res.method = 0;
+    res.determinant = matrix.det();
     res.LU = matrix;
     res.P = SquareMatrix::IdentityMatrix(matrix.size());
     for (int i = 0; i < matrix.size(); ++i) {
@@ -67,8 +68,8 @@ Results CLUPMatrixInverse::decompose(const SquareMatrix& matrix)
             ++res.complexity;
         }
         if (pivotValue != 0) {
-            res.P.permutate(pivot, i);
-            res.LU.permutate(pivot, i);
+            res.P.permutate_rows(pivot, i);
+            res.LU.permutate_rows(pivot, i);
             for (int j = i + 1; j < matrix.size(); ++j) {
                 res.LU[i][j] /= res.LU[i][i];
                 ++res.complexity;
@@ -137,6 +138,7 @@ Results CShultsMatrixInverse::inverse(const SquareMatrix& matrix, double precisi
     res.complexity = 0;
     res.method = 1;
     res.precision = precision;
+    res.determinant = matrix.det();
     SquareMatrix A0 = matrix;
     A0.transpond();
     A0.normalize();
@@ -157,7 +159,7 @@ Results CShultsMatrixInverse::inverse(const SquareMatrix& matrix, double precisi
         inv = prev * inv;                   //(A[k-1]^(-1)).(2E - A.(A[k-1]^(-1)))
         res.complexity += matrix.size() * matrix.size()* matrix.size();
         ++counter;
-        if (counter > 1000) {
+        if (counter > 10000) {
             inv[0][0] = NAN;
             break;
         }

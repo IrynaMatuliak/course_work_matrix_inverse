@@ -20,12 +20,6 @@ void ResultDialog::setText(const QString& txt) {
 
 void ResultDialog::on_SaveToFile_clicked()
 {
-
-    /*QString filename = QFileDialog::getOpenFileName(
-        this,
-        tr("Open Document"),
-        QDir::currentPath(),
-        tr("Document files (*.doc *.rtf);;All files (*.*)"));*/
     QString filename = QFileDialog::getSaveFileName(
         this,
         tr("Save matrix"),
