@@ -19,6 +19,7 @@ class InverseOfMatrix : public QMainWindow
     Q_OBJECT
 
 public:
+    void initializeMatrixWithValues(const std::vector<std::vector<double>>& values);
     InverseOfMatrix(QWidget *parent = nullptr);
     ~InverseOfMatrix();
 
@@ -30,8 +31,6 @@ private slots:
     void on_CalculateButton_clicked();
 
     void on_DeleteButton_clicked();
-
-    void on_OutputToFile_clicked();
 
     void on_HelpButton_clicked();
 

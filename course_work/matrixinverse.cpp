@@ -10,10 +10,10 @@ QString matrix2str(const QString& caption, const SquareMatrix& m)
         for (size_t i = 0; i < m.size(); ++i) {
             double d = m(i, j);
             if ((d > -1e5 && d < -1e-5) || (d > 1e-5 && d < 1e5) || d == 0) {
-                result += QString().asprintf("%15.4lf", m[i][j]);
+                result += QString().asprintf("%15.4Lf", m[i][j]);
             } else {
                 if ((d > -1e11 && d < -1e-11) || (d > 1e-11 && d < 1e11)) {
-                    result += QString().asprintf("%15.4e", m[i][j]);
+                    result += QString().asprintf("%15.4Le", m[i][j]);
                 } else {
                     result += QString().asprintf("%15.4lf", 0.);
                 }

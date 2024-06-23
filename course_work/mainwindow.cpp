@@ -1,17 +1,68 @@
 #include <random>
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "./ui_resultdialog.h"
-#include "./ui_helpdialog.h"
 #include "resultdialog.h"
 #include "helpdialog.h"
 #include <QMessageBox>
 #include <QFileDialog>
 #include <cmath>
-
 std::vector<const char*> methods {"LUP-decomposition", "Shults Method"};
 std::vector<int> sizeOfMatrix {2, 3, 4, 5, 6, 7, 8, 9, 10};
 std::vector<double> precision {1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10};
+
+std::vector<std::vector<double>> initialMatrixValues = {
+    { 12.8538, -14.0461,  -3.4774, -14.3966, -12.8699,  55.9413,  36.1487, -25.7588,  41.1328, -96.9730 },
+    { -95.9739,  16.5915,  61.9532, -49.8691,  78.3523,  66.6649,  58.5234,   4.9418, -25.4568, -39.3329 },
+    {  64.5612, -80.4812,  51.4682,  28.4054,  22.4191, -78.3781, -55.7360,  91.0555, -79.8147,  -5.0118 },
+    { -81.5095, -62.2833,  68.7113, -87.0333,  30.8999, -36.7704,   6.8185, -45.9398,  66.7764,  77.7809 },
+    { -42.2875, -59.1954,  82.8187,  72.7472,  -7.1253,  88.4588, -87.4979,  70.1233,  24.1458, -96.0872 },
+    { -50.6628,  61.8374, -29.5576, -99.2569,  82.9759,  12.7770, -84.3253,  83.6093,  39.9766,  73.7821 },
+    {  95.1122, -16.7203,  82.2234,  76.0680,  14.7936, -33.9456,  25.7464,  55.3051, -83.7945, -28.4071 },
+    { -41.2227, -42.8707, -10.4209, -35.9189, -84.8385,  36.8642, -13.3561, -11.7313, -65.4956,  94.4538 },
+    { -38.4501,  37.8566,  -6.5625, -23.2112, -29.2655,  15.2509,  20.9572, -53.2138, -11.8873,  36.9784 },
+    {  75.3726,  69.7440, -57.1748, -97.2084,  -9.5201,  19.3610,  89.1597, -19.8904, -34.4917,  55.9287 }
+};
+
+void InverseOfMatrix::initializeMatrixWithValues(const std::vector<std::vector<double>>& values)
+{
+    int n = values.size();
+    ui->Matrix->setColumnCount(n);
+    ui->Matrix->setRowCount(n);
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            double value = values[i][j];
+            (*_matrix)(j, i) = value;
+            ui->Matrix->setItem(i, j, new QTableWidgetItem(QString().asprintf("%.4lf", value)));
+        }
+    }
+}
+
+InverseOfMatrix::InverseOfMatrix(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::InverseOfMatrix)
+    , _matrix(new SquareMatrix(initialMatrixValues.size()))
+{
+    ui->setupUi(this);
+    for (int i = 0; i < methods.size(); ++i) {
+        ui->SetMethod->addItem(methods[i]);
+    }
+    ui->SetMethod->setCurrentIndex(0);
+
+    for (int i = 0; i < sizeOfMatrix.size(); ++i) {
+        ui->SetSize->addItem(QString().asprintf("%d", sizeOfMatrix[i]));
+    }
+    ui->SetSize->setCurrentIndex(sizeOfMatrix.size() - 1);
+
+    for (int i = 0; i < precision.size(); ++i) {
+        ui->SetAccuracy->addItem(QString().asprintf("%.0e", precision[i]));
+    }
+    ui->SetAccuracy->setCurrentIndex(0);
+
+    srand(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
+
+    initializeMatrixWithValues(initialMatrixValues);
+}
 
 QString output_matrix(const QString& caption, const SquareMatrix& m)
 {
@@ -20,10 +71,10 @@ QString output_matrix(const QString& caption, const SquareMatrix& m)
         for (size_t i = 0; i < m.size(); ++i) {
             double d = m(i, j);
             if ((d > -1e5 && d < -1e-5) || (d > 1e-5 && d < 1e5) || d == 0 || std::isnan(d)) {
-                result += QString().asprintf("%15.4lf", m[i][j]);
+                result += QString().asprintf("%15.4Lf", m[i][j]);
             } else {
                 if ((d > -1e11 && d < -1e-11) || (d > 1e-11 && d < 1e11)) {
-                    result += QString().asprintf("%15.4e", m[i][j]);
+                    result += QString().asprintf("%15.4Le", m[i][j]);
                 } else {
                     result += QString().asprintf("%15.4lf", 0.);
                 }
@@ -35,7 +86,7 @@ QString output_matrix(const QString& caption, const SquareMatrix& m)
     return result;
 }
 
-InverseOfMatrix::InverseOfMatrix(QWidget *parent)
+/*InverseOfMatrix::InverseOfMatrix(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::InverseOfMatrix)
     , _matrix(new SquareMatrix(2))
@@ -47,9 +98,6 @@ InverseOfMatrix::InverseOfMatrix(QWidget *parent)
     }
     ui->SetMethod->setCurrentIndex(0);
 
-    /*for (int i = 0; i < sizeOfMatrixStr.size(); ++i) {
-        ui->SetSize->addItem(sizeOfMatrixStr[i]);
-    }*/
     for (int i = 0; i < sizeOfMatrix.size(); ++i) {
         ui->SetSize->addItem(QString().asprintf("%d", sizeOfMatrix[i]));
     }
@@ -61,7 +109,7 @@ InverseOfMatrix::InverseOfMatrix(QWidget *parent)
     ui->SetAccuracy->setCurrentIndex(0);
 
     srand(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
-}
+}*/
 
 InverseOfMatrix::~InverseOfMatrix()
 {
@@ -137,27 +185,6 @@ void InverseOfMatrix::on_CalculateButton_clicked()
         return;
     }
     result += formResults(r);
-
-    /*{
-        std::vector<std::vector<double>> v = {{2., 7., 6., 2.},
-                                              {9., 5., 1., 3.},
-                                              {4., 3., 8., 4.},
-                                              {5., 6., 7., 8.}};
-
-        SquareMatrix m = {v};
-        int idx = ui->SetMethod->currentIndex();
-        double prec = precision[ui->SetAccuracy->currentIndex()];
-        Results r = m.inverse(idx, prec);
-        if (isnan(r.X[0][0])) {
-            QMessageBox msg = QMessageBox();
-            msg.setWindowTitle("Error");
-            msg.setText("Method doesn't converge. Unable find inverse matrix.");
-            msg.setIcon(QMessageBox::Critical);
-            msg.exec();
-            return;
-        }
-        result += formResults(r);
-    }*/
     dlg.setText(result);
     dlg.exec();
 }
@@ -172,36 +199,6 @@ void InverseOfMatrix::on_DeleteButton_clicked()
         }
     }
 
-}
-
-void InverseOfMatrix::on_OutputToFile_clicked()
-{
-    QString filename = QFileDialog::getSaveFileName(
-        this,
-        tr("Save matrix"),
-        QDir::currentPath(),
-        tr("Text files (*.txt);;All files (*.*)"));
-    if (!filename.isNull()) {
-        out_stream wrap_stream(filename.toStdString());
-
-        if (!wrap_stream->is_open()) {
-            QMessageBox msg = QMessageBox();
-            msg.setWindowTitle("Error");
-            msg.setText(QString("Unable to open ") + filename);
-            msg.setIcon(QMessageBox::Critical);
-            msg.exec();
-            return;
-        }
-
-        for (size_t i = 0; i < _matrix->size(); ++i) {
-            for (size_t j = 0; j < _matrix->size(); ++j) {
-                wrap_stream.getStream() << std::setw(10) << std::fixed << std::setprecision(4) << (*_matrix)(i, j);
-            }
-            wrap_stream.getStream() << "\n";
-        }
-        wrap_stream.getStream() << std::endl;
-
-    }
 }
 
 void InverseOfMatrix::on_HelpButton_clicked()
@@ -220,7 +217,6 @@ void InverseOfMatrix::on_GenerateRandomMatrix_clicked()
             double sign = (static_cast<double>(rand()) / RAND_MAX) > 0.5 ? 1. : -1.;
             //double val = (static_cast<double>(rand()) / RAND_MAX) * 1000. * sign;
             double value = static_cast<double>(distr(gen)) / 10007. * sign;
-            auto item = ui->Matrix->itemAt(i, j);
             ui->Matrix->setItem(i, j, new QTableWidgetItem(QString().asprintf("%.4lf", value)));
         }
     }
@@ -236,13 +232,13 @@ QString InverseOfMatrix::formResults(const Results& res)
         result += output_matrix("P matrix:", res.P);
         break;
     case 1:
-        result += "Precision: " + QString().asprintf("%e\n", res.precision);
+        result += "Precision: " + QString().asprintf("%Le\n", res.precision);
         break;
     }
-    result += "Determinant: " + QString().asprintf("%15.4lf\n", res.determinant);
+    result += "Determinant: " + QString().asprintf("%15.4Lf\n", res.determinant);
     result += output_matrix("Inverted matrix:", res.X);
     result += output_matrix("Check A*A^(-1) matrix:", res.A * res.X);
-    result += "Complexity of calculations: " + QString().asprintf("%d\n", res.complexity);
+    result += "Complexity of calculations: " + QString().asprintf("%ld\n", res.complexity);
     result += "\n";
     result += "\n";
     return result;
