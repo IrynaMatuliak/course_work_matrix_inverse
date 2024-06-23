@@ -31,8 +31,6 @@ private slots:
 
     void on_DeleteButton_clicked();
 
-    void on_OutputToFile_clicked();
-
     void on_HelpButton_clicked();
 
     void on_GenerateRandomMatrix_clicked();

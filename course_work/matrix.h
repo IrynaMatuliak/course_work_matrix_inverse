@@ -8,7 +8,7 @@ class SquareMatrix {
 public:
     SquareMatrix() = delete;
     explicit SquareMatrix(size_t n);
-    SquareMatrix(const std::vector<std::vector<double>>& v);
+    SquareMatrix(const std::vector<std::vector<long double>>& v);
     SquareMatrix(const SquareMatrix& m);
     SquareMatrix(SquareMatrix&& m) noexcept;
     SquareMatrix& operator=(const SquareMatrix& m);
@@ -16,17 +16,15 @@ public:
     ~SquareMatrix();
 
     size_t size() const;
-    Results inverse(int method, double precision = 0.);
-    double& operator()(size_t col, size_t row);
-    const double& operator()(size_t col, size_t row) const;
+    Results inverse(int method, long double precision = 0.);
+    long double& operator()(size_t col, size_t row);
+    const long double& operator()(size_t col, size_t row) const;
     SquareMatrix operator*(const SquareMatrix& m) const;
-    SquareMatrix operator*(double val) const;
+    SquareMatrix operator*(long double val) const;
     SquareMatrix operator+(const SquareMatrix& m) const;
     void transpond();
     void normalize();
-    void permutateRows(size_t r1, size_t r2);
-    void permutateCols(size_t c1, size_t c2);
-    double det() const;
+    long double det() const;
 
     static SquareMatrix IdentityMatrix(size_t n);
     void permutate_rows(size_t r1, size_t r2);
@@ -40,15 +38,15 @@ private:
     {
     private:
         size_t offset;
-        double* dataPtr;
+        long double* dataPtr;
     public:
         RowProxy() = delete;
-        explicit RowProxy(double* ptr, size_t offset) : dataPtr(ptr), offset(offset) {}
-        double& operator[](size_t j)
+        explicit RowProxy(long double* ptr, size_t offset) : dataPtr(ptr), offset(offset) {}
+        long double& operator[](size_t j)
         {
             return dataPtr[j * offset];
         }
-        const double& operator[](size_t j) const
+        const long double& operator[](size_t j) const
         {
             return dataPtr[j * offset];
         }
@@ -65,7 +63,7 @@ public:
 
 private:
     size_t dimension;
-    double* data;
+    long double* data;
     CLUPMatrixInverse _LUPInverse;
     CShultsMatrixInverse _ShultsInverse;
     CBaseMatrixInverse* _inverse[2];
@@ -74,7 +72,7 @@ private:
     void init(void);
     void init(const SquareMatrix& m);
     std::optional<size_t> find_zero() const;
-    SquareMatrix prepare_for_Gaus(double& sign) const;
+    SquareMatrix prepare_for_Gaus(long double& sign) const;
 };
 
 struct Results {
@@ -83,14 +81,10 @@ struct Results {
     SquareMatrix X;
     SquareMatrix P;
     long int complexity;
-    double precision;
+    long double precision;
     int method;
-    double determinant;
+    long double determinant;
 
     Results();
-    /*Results(const Results& r);
-    Results(Results&& r);
-    Results& operator=(const Results& r);
-    Results& operator=(Results&& r);*/
 };
 

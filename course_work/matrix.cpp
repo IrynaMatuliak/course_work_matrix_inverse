@@ -1,4 +1,3 @@
-#pragma once
 #include <iostream>
 #include <iomanip>
 #include <math.h>
@@ -8,20 +7,19 @@
 #include <cassert>
 #include "matrix.h"
 
-SquareMatrix::SquareMatrix(size_t n) : dimension(n), data(new double[dimension * dimension])
+SquareMatrix::SquareMatrix(size_t n) : dimension(n), data(new long double[dimension * dimension])
 {
     init();
 }
 
 SquareMatrix::SquareMatrix(const SquareMatrix& m)
-            : dimension(m.dimension), data(new double[dimension * dimension]
-           /*, _LUPInverse(m._LUPInverse), _ShultsInversem(m._ShultsInverse)*/
+            : dimension(m.dimension), data(new long double[dimension * dimension]
            )
 {
     init(m);
 }
 
-SquareMatrix::SquareMatrix(const std::vector<std::vector<double>>& v)
+SquareMatrix::SquareMatrix(const std::vector<std::vector<long double>>& v)
 {
     size_t s = v.size();
     bool f = true;
@@ -33,7 +31,7 @@ SquareMatrix::SquareMatrix(const std::vector<std::vector<double>>& v)
     }
     if (f) {
         dimension = s;
-        data = new double[dimension * dimension];
+        data = new long double[dimension * dimension];
         size_t c = 0;
         for (size_t j = 0; j < dimension; ++j) {
             for (size_t i = 0; i < dimension; ++i) {
@@ -44,7 +42,7 @@ SquareMatrix::SquareMatrix(const std::vector<std::vector<double>>& v)
         _inverse[1] = &_ShultsInverse;
     } else {
         dimension = 1;
-        data = new double[dimension * dimension];
+        data = new long double[dimension * dimension];
         init();
     }
 }
@@ -52,7 +50,7 @@ SquareMatrix::SquareMatrix(const std::vector<std::vector<double>>& v)
 SquareMatrix::SquareMatrix(SquareMatrix&& m) noexcept
 {
     dimension = m.dimension;
-    data = new double[1];
+    data = new long double[1];
     std::swap(m.data, data);
     _inverse[0] = &_LUPInverse;
     _inverse[1] = &_ShultsInverse;
@@ -61,7 +59,7 @@ SquareMatrix::SquareMatrix(SquareMatrix&& m) noexcept
 SquareMatrix& SquareMatrix::operator=(const SquareMatrix& m)
 {
     dimension = m.dimension;
-    data = new double[dimension * dimension];
+    data = new long double[dimension * dimension];
     init(m);
     return *this;
 }
@@ -86,7 +84,7 @@ size_t SquareMatrix::size() const
     return dimension;
 }
 
-Results SquareMatrix::inverse(int method, double precision)
+Results SquareMatrix::inverse(int method, long double precision)
 {
     assert(method >=0 && method <= 1);
     Results res = (_inverse[method]->*ptr)(*this, precision);
@@ -95,12 +93,12 @@ Results SquareMatrix::inverse(int method, double precision)
     //return _inverse[method]->inverse(*this);  // The same as above
 }
 
-double& SquareMatrix::operator()(size_t col, size_t row)
+long double& SquareMatrix::operator()(size_t col, size_t row)
 {
     return data[row * dimension + col];
 }
 
-const double& SquareMatrix::operator()(size_t col, size_t row) const
+const long double& SquareMatrix::operator()(size_t col, size_t row) const
 {
     return data[row * dimension + col];
 }
@@ -110,10 +108,10 @@ void SquareMatrix::init(void)
     _inverse[0] = &_LUPInverse;
     _inverse[1] = &_ShultsInverse;
 
-    //memset(data, 0, sizeof(double) * dimension * dimension);
+    //memset(data, 0, sizeof(long double) * dimension * dimension);
     for (size_t i = 0; i < dimension; ++i) {
         for (size_t j = 0; j < dimension; ++j) {
-            data[i * dimension + j] = static_cast<double>(0.);
+            data[i * dimension + j] = static_cast<long double>(0.);
         }
     }
 }
@@ -124,7 +122,7 @@ void SquareMatrix::init(const SquareMatrix& m)
     _inverse[0] = &_LUPInverse;
     _inverse[1] = &_ShultsInverse;
 
-    //memcpy(data, m.data, sizeof(double) * dimension * dimension);
+    //memcpy(data, m.data, sizeof(long double) * dimension * dimension);
     for (size_t i = 0; i < dimension; ++i) {
         for (size_t j = 0; j < dimension; ++j) {
             data[i * dimension + j] = m.data[i * dimension + j];
@@ -146,7 +144,7 @@ SquareMatrix SquareMatrix::operator*(const SquareMatrix& m) const
     return res;
 }
 
-SquareMatrix SquareMatrix::operator*(double val) const
+SquareMatrix SquareMatrix::operator*(long double val) const
 {
     SquareMatrix res = *this;
     for (size_t i = 0; i < dimension * dimension; ++i) {
@@ -166,11 +164,11 @@ SquareMatrix SquareMatrix::operator+(const SquareMatrix& m) const
 
 void SquareMatrix::normalize()
 {
-    double N1 = 0;
-    double Ninf = 0;
+    long double N1 = 0;
+    long double Ninf = 0;
     for(size_t row = 0; row < dimension; row++) {
-        double colsum = 0;
-        double rowsum = 0;
+        long double colsum = 0;
+        long double rowsum = 0;
         for(size_t col = 0; col < dimension; col++){
             rowsum += fabs(data[row * dimension + col]);
             colsum += fabs(data[col * dimension + row]);
@@ -179,7 +177,7 @@ void SquareMatrix::normalize()
         Ninf = std::max(rowsum, Ninf);
     }
 
-    double norm = 1. / (N1 * Ninf);
+    long double norm = 1. / (N1 * Ninf);
     for (size_t i = 0; i < dimension * dimension; ++i) {
         data[i] *= norm;
     }
@@ -194,103 +192,12 @@ void SquareMatrix::transpond()
     }
 }
 
-/*double SquareMatrix::det() const
-{
-    SquareMatrix B = *this;
-
-    for (size_t step = 0; step < dimension - 1; ++step) {
-        for(size_t row = step + 1; row < dimension; ++row) {
-            double coeff = -B[row][step] / B[step][step];
-            for(int col = step; col < dimension; ++col) {
-                B[row][col] += B[step][col] * coeff;
-            }
-        }
-    }
-    double d = 1.;
-    for (size_t i = 0; i < dimension; ++i) {
-        d *= B[i][i];
-    }
-    return d;
-}*/
-
-/*void SquareMatrix::permutateRows(size_t r1, size_t r2) {
-    if (r1 >= dimension || r2 >= dimension) {
-        assert(false);
-        return;
-    }
-    for (size_t i = 0; i < dimension; ++i) {
-        std::swap((*this)(r1, i), (*this)(r2, i));
-    }
-}
-
-void SquareMatrix::permutateCols(size_t c1, size_t c2) {
-    if (c1 >= dimension || c2 >= dimension) {
-        assert(false);
-        return;
-    }
-    for (size_t i = 0; i < dimension; ++i) {
-        std::swap((*this)(i, c1), (*this)(i, c2));
-    }
-}
-
-double SquareMatrix::det() const {
-    SquareMatrix B = *this;
-    double determinant = 1.0;
-    int sign = 1;
-
-    for (size_t step = 0; step < dimension - 1; ++step) {
-        // Check if the pivot element B[step][step] is zero
-        if (std::fabs(B(step, step)) < std::numeric_limits<double>::epsilon()) {
-            // Try to find a non-zero element in the same column (row permutations)
-            bool found = false;
-            for (size_t row = step + 1; row < dimension; ++row) {
-                if (std::fabs(B(row, step)) > std::numeric_limits<double>::epsilon()) {
-                    B.permutateRows(step, row);
-                    sign *= -1;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                // Try to find a non-zero element in the same row (column permutations)
-                for (size_t col = step + 1; col < dimension; ++col) {
-                    if (std::fabs(B(step, col)) > std::numeric_limits<double>::epsilon()) {
-                        B.permutateCols(step, col);
-                        sign *= -1;
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            // If no non-zero element is found, the determinant is zero
-            if (!found) {
-                return 0.0;
-            }
-        }
-
-        // Proceed with Gaussian elimination
-        for (size_t row = step + 1; row < dimension; ++row) {
-            double coeff = -B(row, step) / B(step, step);
-            for (size_t col = step; col < dimension; ++col) {
-                B(row, col) += B(step, col) * coeff;
-            }
-        }
-    }
-
-    // Calculate the product of the diagonal elements
-    for (size_t i = 0; i < dimension; ++i) {
-        determinant *= B(i, i);
-    }
-
-    return determinant * sign;
-}*/
-
 std::optional<size_t> SquareMatrix::find_zero() const
 {
     std::optional<size_t> res{std::nullopt};
 
     for (size_t i = 0; i < dimension; ++i) {
-        if (std::fabs(data[i * dimension + i]) < std::numeric_limits<double>::epsilon()) {
+        if (std::fabs(data[i * dimension + i]) < std::numeric_limits<long double>::epsilon()) {
             res = i;
             break;
         }
@@ -298,7 +205,7 @@ std::optional<size_t> SquareMatrix::find_zero() const
     return res;
 }
 
-SquareMatrix SquareMatrix::prepare_for_Gaus(double& sign) const
+SquareMatrix SquareMatrix::prepare_for_Gaus(long double& sign) const
 {
     SquareMatrix res = *this;
     struct Diag {
@@ -334,11 +241,11 @@ SquareMatrix SquareMatrix::prepare_for_Gaus(double& sign) const
                     break;
                 }
                 // Probably exchange d.place column with d.idx_x column. Needs additional check
-                if (std::fabs(res[d.idx_x][d.place]) < std::numeric_limits<double>::epsilon()) {
+                if (std::fabs(res[d.idx_x][d.place]) < std::numeric_limits<long double>::epsilon()) {
                     ++d.idx_x;
                     continue;
                 }
-                if ((d.idx_x < d.place) && std::fabs(res[d.place][d.idx_x]) < std::numeric_limits<double>::epsilon()) {
+                if ((d.idx_x < d.place) && std::fabs(res[d.place][d.idx_x]) < std::numeric_limits<long double>::epsilon()) {
                     // If new diagonal value is zero. Needs to skip this case
                     ++d.idx_x;
                     continue;
@@ -356,11 +263,11 @@ SquareMatrix SquareMatrix::prepare_for_Gaus(double& sign) const
                     break;
                 }
                 // Probably exchange d.place row with d.idx_y row. Needs additional check
-                if (std::fabs(res[d.place][d.idx_y]) < std::numeric_limits<double>::epsilon()) {
+                if (std::fabs(res[d.place][d.idx_y]) < std::numeric_limits<long double>::epsilon()) {
                     ++d.idx_y;
                     continue;
                 }
-                if ((d.idx_y < d.place) && std::fabs(res[d.idx_y][d.place]) < std::numeric_limits<double>::epsilon()) {
+                if ((d.idx_y < d.place) && std::fabs(res[d.idx_y][d.place]) < std::numeric_limits<long double>::epsilon()) {
                     // If new diagonal value is zero. Needs to skip this case
                     ++d.idx_y;
                     continue;
@@ -400,15 +307,15 @@ SquareMatrix SquareMatrix::prepare_for_Gaus(double& sign) const
     return res;
 }
 
-double SquareMatrix::det() const
+long double SquareMatrix::det() const
 {
-    double d = 0.;
+    long double d = 0.;
     do {
         // Check rows
         for (size_t i = 0; i < dimension; ++i) {
             bool zero_row = true;
             for (size_t j = 0; j < dimension; ++j) {
-                if (std::fabs(data[i * dimension + j]) > std::numeric_limits<double>::epsilon()) {
+                if (std::fabs(data[i * dimension + j]) > std::numeric_limits<long double>::epsilon()) {
                     zero_row = false;
                     break;
                 }
@@ -422,7 +329,7 @@ double SquareMatrix::det() const
         for (size_t i = 0; i < dimension; ++i) {
             bool zero_col = true;
             for (size_t j = 0; j < dimension; ++j) {
-                if (std::fabs(data[i + j * dimension]) > std::numeric_limits<double>::epsilon()) {
+                if (std::fabs(data[i + j * dimension]) > std::numeric_limits<long double>::epsilon()) {
                     zero_col = false;
                     break;
                 }
@@ -433,14 +340,14 @@ double SquareMatrix::det() const
         }
 
         // Check diagonal and permutate if it needs
-        double sign = 1.;
+        long double sign = 1.;
         SquareMatrix B = prepare_for_Gaus(sign);
 
         if (!std::isnan(B[0][0])) {
             //std::cout << "Transponded matrix:\n" << B << "\n";
             for (size_t step = 0; step < dimension - 1; step++) {
-                for (size_t row = step + 1; row < dimension - 1; row++) {
-                    double coeff = -B[row][step] / B[step][step];
+                for (size_t row = step + 1; row < dimension; row++) {
+                    long double coeff = -B[row][step] / B[step][step];
                     for (size_t col = step; col < dimension; col++) {
                         B[row][col] += B[step][col] * coeff;
                     }
@@ -473,7 +380,7 @@ void SquareMatrix::permutate_rows(size_t r1, size_t r2)
         return;
     }
     for (size_t i = 0; i < dimension; ++i) {
-        double d = data[i + r1 * dimension];
+        long double d = data[i + r1 * dimension];
         data[i + r1 * dimension] = data[i + r2 * dimension];
         data[i + r2 * dimension] = d;
     }
@@ -486,7 +393,7 @@ void SquareMatrix::permutate_columns(size_t c1, size_t c2)
         return;
     }
     for (size_t i = 0; i < dimension; ++i) {
-        double d = data[c1 + i * dimension];
+        long double d = data[c1 + i * dimension];
         data[c1 + i * dimension] = data[c2 + i * dimension];
         data[c2 + i * dimension] = d;
     }
@@ -520,7 +427,7 @@ SquareMatrix SquareMatrix::HighTriangularMatrix()
 
 bool SquareMatrix::isSingular()
 {
-    return !(std::fabs(det()) > std::numeric_limits<double>::epsilon());
+    return !(std::fabs(det()) > std::numeric_limits<long double>::epsilon());
 }
 
 std::ostream& operator<<(std::ostream& out, const SquareMatrix& matrix)
@@ -538,26 +445,3 @@ std::ostream& operator<<(std::ostream& out, const SquareMatrix& matrix)
 Results::Results() : A(SquareMatrix(1)), LU(SquareMatrix(1)), X(SquareMatrix(1)), P(SquareMatrix(1))
 {
 }
-/*
-Results::Results(const Results& r) : LU(r.LU), P(SquareMatrix(r.P))
-{
-
-}
-
-Results::Results(Results&& r) : LU(r.LU), P(SquareMatrix(r.P))
-{
-
-}
-
-Results& Results::operator=(const Results& r)
-{
-    LU = r.LU;
-    P = r.P;
-}
-
-Results& Results::operator=(Results&& r)
-{
-    LU = r.LU;
-    P = r.P;
-}
-*/
